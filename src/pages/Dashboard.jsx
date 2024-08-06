@@ -1,5 +1,8 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
+import ObjectCounter from '../components/ObjectCounter';
+import DailyStatisticsChart from '../components/DailyStatisticsChart';
+import RecentAlerts from '../components/RecentAlerts';
 
 const Dashboard = () => {
   return (
@@ -7,10 +10,17 @@ const Dashboard = () => {
       <Typography variant="h4" component="h1" gutterBottom>
         Dashboard
       </Typography>
-      <Typography variant="body1">
-        Welcome to the Recycling Object Detection System Dashboard. Here you can view your recycling statistics and recent detections.
-      </Typography>
-      {/* Add more dashboard components here */}
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={4}>
+          <ObjectCounter />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <DailyStatisticsChart />
+        </Grid>
+        <Grid item xs={12}>
+          <RecentAlerts />
+        </Grid>
+      </Grid>
     </div>
   );
 };
