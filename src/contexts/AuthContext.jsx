@@ -52,11 +52,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setToken(null);
     setIsAuthenticated(false);
     setUser(null);
-  };
+    // Redirect to login page
+    window.location.href = '/login';
+  }, [setToken]);
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, user, login, logout, getToken }}>
