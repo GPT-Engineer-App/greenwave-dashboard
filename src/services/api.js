@@ -8,7 +8,6 @@ const apiClient = (token = null) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    withCredentials: false,
   });
 
   if (token) {
@@ -22,10 +21,12 @@ const apiClient = (token = null) => {
   instance.interceptors.response.use(
     (response) => response,
     (error) => {
-      if (error.response && error.response.status === 403) {
-        // Handle CORB issues
-        console.error('CORB error:', error);
-        // You might want to implement a retry mechanism or error handling here
+      if (error.response) {
+        console.error('API Error:', error.response.status, error.response.data);
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+      } else {
+        console.error('Error setting up request:', error.message);
       }
       return Promise.reject(error);
     }
