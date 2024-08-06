@@ -7,7 +7,11 @@ const apiClient = (token = null) => {
     baseURL: API_BASE_URL,
     headers: {
       'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+      'Access-Control-Allow-Private-Network': 'true',
     },
+    withCredentials: true,
   });
 
   if (token) {
@@ -16,6 +20,19 @@ const apiClient = (token = null) => {
       return config;
     });
   }
+
+  // Add a response interceptor
+  instance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response && error.response.status === 403) {
+        // Handle CORB issues
+        console.error('CORB error:', error);
+        // You might want to implement a retry mechanism or error handling here
+      }
+      return Promise.reject(error);
+    }
+  );
 
   return {
     get: (url, config = {}) => instance.get(url, config),
