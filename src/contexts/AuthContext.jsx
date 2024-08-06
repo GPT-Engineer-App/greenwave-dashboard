@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
-import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import apiClient, { login as apiLogin } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -17,37 +17,36 @@ const TOKEN_KEY = 'auth_token';
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
 
-  const setToken = useCallback((token) => {
-    if (token) {
-      sessionStorage.setItem(TOKEN_KEY, token);
+  const setTokenAndStorage = useCallback((newToken) => {
+    if (newToken) {
+      sessionStorage.setItem(TOKEN_KEY, newToken);
+      setToken(newToken);
     } else {
       sessionStorage.removeItem(TOKEN_KEY);
+      setToken(null);
     }
-  }, []);
-
-  const getToken = useCallback(() => {
-    return sessionStorage.getItem(TOKEN_KEY);
   }, []);
 
   useEffect(() => {
-    const token = getToken();
-    if (token) {
-      const decodedToken = jwtDecode(token);
+    const storedToken = sessionStorage.getItem(TOKEN_KEY);
+    if (storedToken) {
+      const decodedToken = jwtDecode(storedToken);
       if (decodedToken.exp * 1000 > Date.now()) {
+        setToken(storedToken);
         setIsAuthenticated(true);
         setUser(decodedToken);
       } else {
-        setToken(null);
+        setTokenAndStorage(null);
       }
     }
-  }, [getToken, setToken]);
+  }, [setTokenAndStorage]);
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post('https://backengine-nqhbcnzf.fly.dev/api/login', { email, password });
-      const { token } = response.data;
-      setToken(token);
+      const { token } = await apiLogin(email, password);
+      setTokenAndStorage(token);
       const decodedToken = jwtDecode(token);
       setIsAuthenticated(true);
       setUser(decodedToken);
@@ -59,15 +58,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = useCallback(() => {
-    setToken(null);
+    setTokenAndStorage(null);
     setIsAuthenticated(false);
     setUser(null);
-    // Redirect to login page
     window.location.href = '/login';
-  }, [setToken]);
+  }, [setTokenAndStorage]);
+
+  const authApiClient = useCallback(() => {
+    return apiClient(token);
+  }, [token]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, getToken }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, authApiClient }}>
       {children}
     </AuthContext.Provider>
   );

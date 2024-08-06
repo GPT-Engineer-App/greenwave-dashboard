@@ -1,40 +1,33 @@
 import axios from 'axios';
-import { useAuth } from '../contexts/AuthContext';
 
-const API_URL = import.meta.env.REACT_APP_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL;
 
-const api = axios.create({
-  baseURL: API_URL,
-});
+const apiClient = (token = null) => {
+  const instance = axios.create({
+    baseURL: API_BASE_URL,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
-api.interceptors.request.use((config) => {
-  const { getToken } = useAuth();
-  const token = getToken();
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-const apiCall = async (method, endpoint, data = null, params = null) => {
-  try {
-    const response = await api({
-      method,
-      url: endpoint,
-      data,
-      params,
+    instance.interceptors.request.use((config) => {
+      config.headers.Authorization = `Bearer ${token}`;
+      return config;
     });
-    return response.data;
-  } catch (error) {
-    console.error('API call error:', error);
-    throw error;
   }
+
+  return {
+    get: (url, config = {}) => instance.get(url, config),
+    post: (url, data, config = {}) => instance.post(url, data, config),
+    put: (url, data, config = {}) => instance.put(url, data, config),
+    delete: (url, config = {}) => instance.delete(url, config),
+  };
 };
 
-export const login = (email, password) => apiCall('post', '/login', { email, password });
+export const login = async (email, password) => {
+  const response = await apiClient().post('/login', { email, password });
+  return response.data;
+};
 
-// Example of how to use the apiCall function for other endpoints
-// export const getUserData = () => apiCall('get', '/user');
-// export const updateUserProfile = (data) => apiCall('put', '/user/profile', data);
-
-export default apiCall;
+export default apiClient;
