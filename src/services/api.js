@@ -7,12 +7,8 @@ const apiClient = (token = null) => {
     baseURL: API_BASE_URL,
     headers: {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-      'Access-Control-Allow-Private-Network': 'true',
-      'Access-Control-Allow-Private-Network': 'true',
     },
-    withCredentials: true,
+    withCredentials: false,
   });
 
   if (token) {
@@ -44,13 +40,23 @@ const apiClient = (token = null) => {
 };
 
 export const login = async (email, password) => {
-  const response = await apiClient().post('/auth/login', { email, password });
-  return response.data;
+  try {
+    const response = await apiClient().post('/auth/login', { email, password });
+    return response.data;
+  } catch (error) {
+    console.error('Login error:', error);
+    throw error;
+  }
 };
 
 export const signup = async (email, password) => {
-  const response = await apiClient().post('/auth/signup', { email, password });
-  return response.data;
+  try {
+    const response = await apiClient().post('/auth/signup', { email, password });
+    return response.data;
+  } catch (error) {
+    console.error('Signup error:', error);
+    throw error;
+  }
 };
 
 export default apiClient;
