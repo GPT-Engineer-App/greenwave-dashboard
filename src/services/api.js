@@ -30,4 +30,9 @@ export const login = async (email, password) => {
   return response.data;
 };
 
+export const signup = async (email, password) => {
+  const response = await apiClient().post('/signup', { email, password });
+  return response.data;
+};
+
 export default apiClient;

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext.jsx';
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Statistics from './pages/Statistics';
 import Settings from './pages/Settings';
@@ -18,6 +19,7 @@ const App = () => {
         <Router>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route element={<PrivateRoute />}>
               <Route element={<Layout />}>
                 <Route path="/" element={<Dashboard />} />
