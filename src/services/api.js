@@ -17,6 +17,17 @@ const apiClient = (token = null) => {
     });
   }
 
+  instance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response && error.response.status === 401) {
+        console.error('Unauthorized access. Redirecting to login...');
+        // The actual redirect will be handled in the AuthContext
+      }
+      return Promise.reject(error);
+    }
+  );
+
   // Add a response interceptor
   instance.interceptors.response.use(
     (response) => response,

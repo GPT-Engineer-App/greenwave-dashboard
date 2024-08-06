@@ -2,14 +2,21 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, Typography, CircularProgress } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const ObjectCounter = () => {
   const { authApiClient } = useAuth();
+  const navigate = useNavigate();
 
   const { data: counts, isLoading, error } = useQuery({
     queryKey: ['objectCounts'],
     queryFn: () => authApiClient().get('/api/counts').then(res => res.data),
     refetchInterval: 5000, // Refetch every 5 seconds for real-time updates
+    onError: (error) => {
+      if (error.response && error.response.status === 401) {
+        navigate('/login');
+      }
+    },
   });
 
   if (isLoading) return <CircularProgress />;

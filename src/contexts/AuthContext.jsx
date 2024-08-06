@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import apiClient, { login as apiLogin, signup as apiSignup } from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
@@ -18,6 +19,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const navigate = useNavigate();
 
   const setTokenAndStorage = useCallback((newToken) => {
     if (newToken) {
@@ -83,8 +85,19 @@ export const AuthProvider = ({ children }) => {
   }, [setTokenAndStorage]);
 
   const authApiClient = useCallback(() => {
-    return apiClient(token);
-  }, [token]);
+    const client = apiClient(token);
+    client.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response && error.response.status === 401) {
+          logout();
+          navigate('/login');
+        }
+        return Promise.reject(error);
+      }
+    );
+    return client;
+  }, [token, navigate]);
 
   const value = {
     isAuthenticated,
