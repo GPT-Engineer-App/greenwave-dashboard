@@ -32,18 +32,23 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const storedToken = sessionStorage.getItem(TOKEN_KEY);
     if (storedToken) {
-      const decodedToken = jwtDecode(storedToken);
-      if (decodedToken.exp * 1000 > Date.now()) {
-        setToken(storedToken);
-        setIsAuthenticated(true);
-        setUser(decodedToken);
-      } else {
+      try {
+        const decodedToken = jwtDecode(storedToken);
+        if (decodedToken.exp * 1000 > Date.now()) {
+          setToken(storedToken);
+          setIsAuthenticated(true);
+          setUser(decodedToken);
+        } else {
+          setTokenAndStorage(null);
+        }
+      } catch (error) {
+        console.error('Error decoding token:', error);
         setTokenAndStorage(null);
       }
     }
   }, [setTokenAndStorage]);
 
-  const login = async (email, password) => {
+  const login = useCallback(async (email, password) => {
     try {
       const { token } = await apiLogin(email, password);
       setTokenAndStorage(token);
@@ -55,9 +60,9 @@ export const AuthProvider = ({ children }) => {
       console.error('Login failed:', error);
       return false;
     }
-  };
+  }, [setTokenAndStorage]);
 
-  const signup = async (email, password) => {
+  const signup = useCallback(async (email, password) => {
     try {
       const { token } = await apiSignup(email, password);
       setTokenAndStorage(token);
@@ -69,21 +74,29 @@ export const AuthProvider = ({ children }) => {
       console.error('Signup failed:', error);
       throw error;
     }
-  };
+  }, [setTokenAndStorage]);
 
   const logout = useCallback(() => {
     setTokenAndStorage(null);
     setIsAuthenticated(false);
     setUser(null);
-    window.location.href = '/login';
   }, [setTokenAndStorage]);
 
   const authApiClient = useCallback(() => {
     return apiClient(token);
   }, [token]);
 
+  const value = {
+    isAuthenticated,
+    user,
+    login,
+    signup,
+    logout,
+    authApiClient
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, signup, logout, authApiClient }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
