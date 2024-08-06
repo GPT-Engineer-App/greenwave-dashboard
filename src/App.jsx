@@ -5,6 +5,7 @@ import { AuthProvider } from './contexts/AuthContext.jsx';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Statistics from './pages/Statistics';
+import Settings from './pages/Settings';
 import Layout from './components/Layout';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -21,6 +22,7 @@ const App = () => {
               <Route element={<Layout />}>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/statistics" element={<Statistics />} />
+                <Route path="/settings" element={<Settings />} />
               </Route>
             </Route>
           </Routes>
