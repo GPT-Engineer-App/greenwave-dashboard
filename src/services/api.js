@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext';
 
 const API_URL = import.meta.env.REACT_APP_API_BASE_URL;
 
@@ -7,7 +8,8 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const { getToken } = useAuth();
+  const token = getToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
