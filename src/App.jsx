@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Statistics from './pages/Statistics';
+import Layout from './components/Layout';
 
 const theme = createTheme({
   palette: {
@@ -35,22 +36,24 @@ const App = () => {
           <Router>
             <Routes>
               <Route path="/login" element={<Login />} />
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/statistics"
-                element={
-                  <ProtectedRoute>
-                    <Statistics />
-                  </ProtectedRoute>
-                }
-              />
+              <Route element={<Layout />}>
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/statistics"
+                  element={
+                    <ProtectedRoute>
+                      <Statistics />
+                    </ProtectedRoute>
+                  }
+                />
+              </Route>
             </Routes>
           </Router>
         </AuthProvider>
