@@ -14,8 +14,8 @@ const queryClient = new QueryClient();
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Router>
+    <Router>
+      <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <Routes>
             <Route path="/login" element={<Login />} />

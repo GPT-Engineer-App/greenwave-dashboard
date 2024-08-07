@@ -57,7 +57,11 @@ export const login = async (email, password) => {
     return response.data;
   } catch (error) {
     console.error('Login error:', error);
-    throw error;
+    if (error.response && error.response.data && error.response.data.error) {
+      throw new Error(error.response.data.error);
+    } else {
+      throw new Error('An unexpected error occurred during login');
+    }
   }
 };
 

@@ -14,10 +14,10 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    const success = await login(email, password);
-    if (success) {
+    try {
+      await login(email, password);
       navigate('/');
-    } else {
+    } catch (error) {
       setError('Invalid email or password');
     }
   };

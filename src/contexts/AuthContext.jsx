@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
       return true;
     } catch (error) {
       console.error('Login failed:', error);
-      return false;
+      throw error; // Rethrow the error to be handled in the component
     }
   }, [setTokenAndStorage]);
 
