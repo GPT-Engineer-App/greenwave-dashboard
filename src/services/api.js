@@ -7,8 +7,8 @@ const apiClient = (token = null) => {
     baseURL: API_BASE_URL,
     headers: {
       'Content-Type': 'application/json',
-      'X-API-Key': API_KEY,
     },
+    withCredentials: false, // Don't send credentials by default
   });
 
   if (token) {
@@ -56,7 +56,7 @@ const apiClient = (token = null) => {
 
 export const login = async (email, password) => {
   try {
-    const response = await apiClient().post('/auth/login', { email, password });
+    const response = await apiClient().post('/auth/login', { email, password }, { withCredentials: true });
     return response.data;
   } catch (error) {
     console.error('Login error:', error);
