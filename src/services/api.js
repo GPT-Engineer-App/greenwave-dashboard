@@ -125,4 +125,24 @@ export const getRecentAlerts = async () => {
   }
 };
 
+export const getSettings = async () => {
+  try {
+    const response = await apiClient().get('/api/settings');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching settings:', error);
+    throw error;
+  }
+};
+
+export const updateSettings = async (settings) => {
+  try {
+    const response = await apiClient().put('/api/settings', settings);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating settings:', error);
+    throw error;
+  }
+};
+
 export default apiClient;
