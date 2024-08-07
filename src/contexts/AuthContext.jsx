@@ -42,10 +42,14 @@ export const AuthProvider = ({ children }) => {
           setUser(decodedToken);
         } else {
           setTokenAndStorage(null);
+          setIsAuthenticated(false);
+          setUser(null);
         }
       } catch (error) {
         console.error('Error decoding token:', error);
         setTokenAndStorage(null);
+        setIsAuthenticated(false);
+        setUser(null);
       }
     }
   }, [setTokenAndStorage]);
@@ -84,7 +88,8 @@ export const AuthProvider = ({ children }) => {
     setTokenAndStorage(null);
     setIsAuthenticated(false);
     setUser(null);
-  }, [setTokenAndStorage]);
+    navigate('/login');
+  }, [setTokenAndStorage, navigate]);
 
   const authApiClient = useCallback(() => {
     const client = apiClient(token);
@@ -93,13 +98,12 @@ export const AuthProvider = ({ children }) => {
       (error) => {
         if (error.response && error.response.status === 401) {
           logout();
-          navigate('/login');
         }
         return Promise.reject(error);
       }
     );
     return client;
-  }, [token, navigate]);
+  }, [token, logout]);
 
   const value = {
     isAuthenticated,
