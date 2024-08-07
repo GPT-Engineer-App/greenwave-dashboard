@@ -87,7 +87,7 @@ export const signup = async (email, password) => {
 
 export const getObjectCounts = async () => {
   try {
-    const response = await apiClient().get('/objects/counts');
+    const response = await apiClient().get('/api/counts');
     return response.data;
   } catch (error) {
     console.error('Error fetching object counts:', error);
@@ -97,7 +97,7 @@ export const getObjectCounts = async () => {
 
 export const getDailyStats = async () => {
   try {
-    const response = await apiClient().get('/stats/daily');
+    const response = await apiClient().get('/api/stats');
     return response.data;
   } catch (error) {
     console.error('Error fetching daily stats:', error);
@@ -107,11 +107,8 @@ export const getDailyStats = async () => {
 
 export const getRecentAlerts = async () => {
   try {
-    // Mocking the recent alerts data as the actual endpoint might not exist
-    return [
-      { id: 1, message: "High plastic detection", timestamp: new Date().toISOString() },
-      { id: 2, message: "Low paper detection", timestamp: new Date(Date.now() - 86400000).toISOString() },
-    ];
+    const response = await apiClient().get('/api/alerts');
+    return response.data;
   } catch (error) {
     console.error('Error fetching recent alerts:', error);
     throw error;

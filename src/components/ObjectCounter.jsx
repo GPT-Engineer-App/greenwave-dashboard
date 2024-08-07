@@ -1,6 +1,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent, Typography, CircularProgress } from '@mui/material';
+import { Card, CardContent, Typography, CircularProgress, Grid } from '@mui/material';
 import { getObjectCounts } from '../services/api';
 
 const ObjectCounter = () => {
@@ -16,12 +16,15 @@ const ObjectCounter = () => {
   return (
     <Card>
       <CardContent>
-        <Typography variant="h6" gutterBottom>Current Object Counts</Typography>
-        {Object.entries(counts).map(([objectType, count]) => (
-          <Typography key={objectType}>
-            {objectType}: {count}
-          </Typography>
-        ))}
+        <Typography variant="h6" gutterBottom>Real-Time Object Counts</Typography>
+        <Grid container spacing={2}>
+          {Object.entries(counts).map(([objectType, count]) => (
+            <Grid item xs={6} key={objectType}>
+              <Typography variant="subtitle1">{objectType}</Typography>
+              <Typography variant="h4">{count}</Typography>
+            </Grid>
+          ))}
+        </Grid>
       </CardContent>
     </Card>
   );

@@ -13,6 +13,8 @@ const DailyStatisticsChart = () => {
   if (isLoading) return <CircularProgress />;
   if (error) return <Typography color="error">Error loading daily statistics</Typography>;
 
+  const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
+
   return (
     <Card>
       <CardContent>
@@ -29,7 +31,8 @@ const DailyStatisticsChart = () => {
                 key={objectType} 
                 type="monotone" 
                 dataKey={objectType} 
-                stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`} 
+                stroke={colors[index % colors.length]}
+                strokeWidth={2}
               />
             ))}
           </LineChart>

@@ -8,7 +8,7 @@ const Dashboard = () => {
   return (
     <div className="container mx-auto p-4">
       <Typography variant="h4" component="h1" gutterBottom>
-        Dashboard
+        RecycleDetect Dashboard
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>

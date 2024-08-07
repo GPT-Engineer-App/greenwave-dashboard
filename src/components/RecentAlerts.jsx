@@ -8,6 +8,7 @@ const RecentAlerts = () => {
   const { data: alerts, isLoading, error } = useQuery({
     queryKey: ['recentAlerts'],
     queryFn: getRecentAlerts,
+    refetchInterval: 30000, // Refetch every 30 seconds
   });
 
   if (isLoading) return <CircularProgress />;
@@ -18,8 +19,8 @@ const RecentAlerts = () => {
       <CardContent>
         <Typography variant="h6" gutterBottom>Recent Alerts</Typography>
         <List>
-          {alerts.map((alert, index) => (
-            <ListItem key={index}>
+          {alerts.map((alert) => (
+            <ListItem key={alert.id}>
               <ListItemText
                 primary={alert.message}
                 secondary={formatDate(alert.timestamp)}
