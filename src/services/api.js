@@ -1,12 +1,14 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://backengine-nqhbcnzf.fly.dev/api';
+const API_BASE_URL = 'https://api.enginelabs.ai/v1';
+const API_KEY = '053e4514d81a774f6d00a9e9639d5d22';
 
 const apiClient = (token = null) => {
   const instance = axios.create({
     baseURL: API_BASE_URL,
     headers: {
       'Content-Type': 'application/json',
+      'X-API-Key': API_KEY,
     },
   });
 
@@ -59,8 +61,8 @@ export const login = async (email, password) => {
     return response.data;
   } catch (error) {
     console.error('Login error:', error);
-    if (error.response && error.response.data && error.response.data.error) {
-      throw new Error(error.response.data.error);
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
     } else {
       throw new Error('An unexpected error occurred during login');
     }
@@ -69,10 +71,44 @@ export const login = async (email, password) => {
 
 export const signup = async (email, password) => {
   try {
-    const response = await apiClient().post('/auth/signup', { email, password });
+    const response = await apiClient().post('/auth/register', { email, password });
     return response.data;
   } catch (error) {
     console.error('Signup error:', error);
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    } else {
+      throw new Error('An unexpected error occurred during signup');
+    }
+  }
+};
+
+export const getObjectCounts = async () => {
+  try {
+    const response = await apiClient().get('/objects/counts');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching object counts:', error);
+    throw error;
+  }
+};
+
+export const getDailyStats = async () => {
+  try {
+    const response = await apiClient().get('/stats/daily');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching daily stats:', error);
+    throw error;
+  }
+};
+
+export const getRecentAlerts = async () => {
+  try {
+    const response = await apiClient().get('/alerts/recent');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching recent alerts:', error);
     throw error;
   }
 };

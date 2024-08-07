@@ -1,15 +1,13 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, Typography, List, ListItem, ListItemText, CircularProgress } from '@mui/material';
-import { useAuth } from '../contexts/AuthContext';
 import { formatDate } from '../utils/formatters';
+import { getRecentAlerts } from '../services/api';
 
 const RecentAlerts = () => {
-  const { authApiClient } = useAuth();
-
   const { data: alerts, isLoading, error } = useQuery({
     queryKey: ['recentAlerts'],
-    queryFn: () => authApiClient().get('/api/alerts').then(res => res.data),
+    queryFn: getRecentAlerts,
   });
 
   if (isLoading) return <CircularProgress />;

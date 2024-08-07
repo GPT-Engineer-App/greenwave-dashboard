@@ -2,14 +2,12 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, Typography, CircularProgress } from '@mui/material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { useAuth } from '../contexts/AuthContext';
+import { getDailyStats } from '../services/api';
 
 const DailyStatisticsChart = () => {
-  const { authApiClient } = useAuth();
-
   const { data: stats, isLoading, error } = useQuery({
     queryKey: ['dailyStats'],
-    queryFn: () => authApiClient().get('/api/stats').then(res => res.data),
+    queryFn: getDailyStats,
   });
 
   if (isLoading) return <CircularProgress />;
