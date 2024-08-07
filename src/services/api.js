@@ -8,7 +8,7 @@ const apiClient = (token = null) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    withCredentials: false, // Don't send credentials by default
+    withCredentials: true, // Send credentials with every request
   });
 
   if (token) {
@@ -56,7 +56,7 @@ const apiClient = (token = null) => {
 
 export const login = async (email, password) => {
   try {
-    const response = await apiClient().post('/auth/login', { email, password }, { withCredentials: true });
+    const response = await apiClient().post('/auth/login', { email, password });
     return response.data;
   } catch (error) {
     console.error('Login error:', error);
