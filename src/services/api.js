@@ -34,11 +34,13 @@ const apiClient = (token = null) => {
     (error) => {
       if (error.response) {
         console.error('API Error:', error.response.status, error.response.data);
+        console.error('Request that caused the error:', error.config);
       } else if (error.request) {
         console.error('No response received:', error.request);
       } else {
         console.error('Error setting up request:', error.message);
       }
+      console.error('Error stack:', error.stack);
       return Promise.reject(error);
     }
   );
