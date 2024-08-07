@@ -1,22 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
-import { useAuth } from '../contexts/AuthContext.jsx';
+import { login } from '../services/api';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const auth = useAuth();
-  const { login } = auth || {};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     try {
-      await login(email, password);
-      navigate('/');
+      const response = await login(email, password);
+      localStorage.setItem('token', response.token);
+      navigate('/dashboard');
     } catch (error) {
       setError('Invalid email or password');
     }
