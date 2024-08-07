@@ -105,6 +105,16 @@ export const getDailyStats = async () => {
   }
 };
 
+export const getDetailedStats = async () => {
+  try {
+    const response = await apiClient().get('/api/stats/detailed');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching detailed stats:', error);
+    throw error;
+  }
+};
+
 export const getRecentAlerts = async () => {
   try {
     const response = await apiClient().get('/api/alerts');

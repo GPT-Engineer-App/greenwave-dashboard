@@ -11,10 +11,10 @@ const Dashboard = () => {
         RecycleDetect Dashboard
       </Typography>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} lg={4}>
           <ObjectCounter />
         </Grid>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} lg={8}>
           <DailyStatisticsChart />
         </Grid>
         <Grid item xs={12}>
