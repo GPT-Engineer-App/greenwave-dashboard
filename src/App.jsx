@@ -29,8 +29,8 @@ const App = () => {
             </Route>
           </Routes>
         </AuthProvider>
-      </Router>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </Router>
   );
 };
 
